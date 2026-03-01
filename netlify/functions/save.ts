@@ -28,7 +28,7 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
     }
 
     const drawingId = uuidv4();
-    const ownerId = process.env.DEFAULT_OWNER_ID ?? '00000000-0000-0000-0000-000000000001';
+    const ownerId = process.env.DEFAULT_OWNER_ID;
     const basePath = `${ownerId}/${drawingId}`;
 
     // Run PDF generation, thumbnail generation, and metadata extraction in parallel

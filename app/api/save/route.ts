@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     }
 
     const drawingId = uuidv4();
-    const ownerId = process.env.DEFAULT_OWNER_ID ?? '00000000-0000-0000-0000-000000000001';
+    const ownerId = process.env.DEFAULT_OWNER_ID;
     const basePath = `${ownerId}/${drawingId}`;
 
     const isImageArtifact = Boolean(imageBase64);

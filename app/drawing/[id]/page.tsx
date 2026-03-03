@@ -43,7 +43,7 @@ export default function DrawingDetailPage({ params }: { params: { id: string } }
 
     fetchUrl(drawing.svg_path, 'drawings-svg', setSvgUrl);
     fetchUrl(drawing.pdf_path, 'drawings-pdf', setPdfUrl);
-    fetchUrl(drawing.thumb_path, 'drawings-thumb', setThumbUrl);
+    if (drawing.thumb_path) fetchUrl(drawing.thumb_path, 'drawings-thumb', setThumbUrl);
   }, [drawing]);
 
   const loadSimilar = useCallback(async () => {

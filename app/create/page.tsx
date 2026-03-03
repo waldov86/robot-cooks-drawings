@@ -38,6 +38,7 @@ export default function CreatePage() {
   const [saveStatus, setSaveStatus]       = useState<SaveStatus>('idle');
   const [savedId, setSavedId]             = useState<string | null>(null);
   const [error, setError]                 = useState<string | null>(null);
+  const [saveError, setSaveError]         = useState<string | null>(null);
 
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -67,8 +68,10 @@ export default function CreatePage() {
       if (!res.ok) throw new Error(data.error ?? 'Save failed');
       setSavedId(data.id);
       setSaveStatus('saved');
-    } catch {
+    } catch (err) {
+      console.error('[autoSave]', err);
       setSaveStatus('error');
+      setSaveError(err instanceof Error ? err.message : 'Unknown error');
     }
   }, []);
 
@@ -80,6 +83,7 @@ export default function CreatePage() {
     setArtifact(null);
     setSaveStatus('idle');
     setSavedId(null);
+    setSaveError(null);
     previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     try {
@@ -95,6 +99,7 @@ export default function CreatePage() {
       setArtifact(art);
       setArtifactTitle(prompt.slice(0, 60) || 'drawing');
       autoSave(art, prompt, orientation, lineWeight);
+      setTimeout(() => previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Generation failed');
     } finally {
@@ -327,7 +332,9 @@ export default function CreatePage() {
               </p>
             )}
             {saveStatus === 'error' && (
-              <p className="text-sm font-medium text-red-600">Could not save to library</p>
+              <p className="text-sm font-medium text-red-600">
+                Could not save to library{saveError ? `: ${saveError}` : ''}
+              </p>
             )}
           </div>
         </div>

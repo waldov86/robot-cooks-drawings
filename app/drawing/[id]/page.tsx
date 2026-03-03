@@ -11,6 +11,7 @@ export default function DrawingDetailPage({ params }: { params: { id: string } }
   const [error, setError] = useState<string | null>(null);
   const [svgUrl, setSvgUrl] = useState<string | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [thumbUrl, setThumbUrl] = useState<string | null>(null);
   const [similar, setSimilar] = useState<DrawingResult[]>([]);
   const [similarLoading, setSimilarLoading] = useState(false);
 
@@ -42,6 +43,7 @@ export default function DrawingDetailPage({ params }: { params: { id: string } }
 
     fetchUrl(drawing.svg_path, 'drawings-svg', setSvgUrl);
     fetchUrl(drawing.pdf_path, 'drawings-pdf', setPdfUrl);
+    fetchUrl(drawing.thumb_path, 'drawings-thumb', setThumbUrl);
   }, [drawing]);
 
   const loadSimilar = useCallback(async () => {
@@ -91,7 +93,7 @@ export default function DrawingDetailPage({ params }: { params: { id: string } }
         {/* Preview */}
         <div>
           <div
-            className="overflow-hidden rounded-xl"
+            className="relative overflow-hidden rounded-xl group"
             style={{
               maxWidth: drawing.orientation === 'portrait' ? '420px' : '600px',
               border: '2px solid #ede9e3',
@@ -113,11 +115,33 @@ export default function DrawingDetailPage({ params }: { params: { id: string } }
                 style={{ aspectRatio: drawing.orientation === 'portrait' ? '210/297' : '297/210', background: '#f7f5f2' }}
               />
             )}
+
+            {/* Download buttons overlaid at top of image */}
+            <div className="absolute top-3 left-0 right-0 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              {thumbUrl && (
+                <a
+                  href={thumbUrl}
+                  download={`${drawing.title}.png`}
+                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold shadow-lg"
+                  style={{ background: 'rgba(28,25,22,0.82)', color: '#ffffff', backdropFilter: 'blur(4px)' }}
+                >
+                  ↓ PNG
+                </a>
+              )}
+              {pdfUrl && (
+                <a
+                  href={pdfUrl}
+                  download={`${drawing.title}.pdf`}
+                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold shadow-lg"
+                  style={{ background: 'rgba(249,115,22,0.9)', color: '#ffffff', backdropFilter: 'blur(4px)' }}
+                >
+                  ↓ PDF
+                </a>
+              )}
+            </div>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-3">
-            {svgUrl && <a href={svgUrl} download={`${drawing.title}.svg`} className="btn-secondary">Download SVG</a>}
-            {pdfUrl && <a href={pdfUrl} download={`${drawing.title}.pdf`} className="btn-secondary">Download PDF</a>}
             <button onClick={loadSimilar} disabled={similarLoading} className="btn-ghost">
               {similarLoading ? 'Loading…' : 'Find similar'}
             </button>

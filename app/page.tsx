@@ -10,8 +10,8 @@ export default function HomePage() {
       </h1>
 
       <p className="mt-4 max-w-lg text-lg" style={{ color: '#4a4440' }}>
-        Generate A4-printable coloring pages for kids with AI.
-        Export as PDF. Search your library.
+        Generate A4-printable coloring pages for kids. Export as PDF or image.
+        Or explore the library of creations by other creative minds.
       </p>
 
       <div className="mt-8 flex flex-wrap justify-center gap-4">

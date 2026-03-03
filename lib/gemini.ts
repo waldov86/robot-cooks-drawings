@@ -113,7 +113,8 @@ async function generateWithFallback(
       return text;
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes('404') || (msg.includes('429') && msg.includes('limit: 0'))) {
+      const isRetriable = msg.includes('404') || msg.includes('503') || (msg.includes('429') && msg.includes('limit: 0'));
+      if (isRetriable) {
         console.warn(`[gemini:${label}] Model ${modelName} unavailable, trying next. Reason: ${msg.slice(0, 150)}`);
         lastError = err;
         continue;

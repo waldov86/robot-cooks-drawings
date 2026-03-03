@@ -39,6 +39,7 @@ export default function CreatePage() {
   const [savedId, setSavedId]             = useState<string | null>(null);
   const [error, setError]                 = useState<string | null>(null);
   const [saveError, setSaveError]         = useState<string | null>(null);
+  const [pdfUrl, setPdfUrl]               = useState<string | null>(null);
 
   const previewRef = useRef<HTMLDivElement>(null);
 
@@ -68,6 +69,19 @@ export default function CreatePage() {
       if (!res.ok) throw new Error(data.error ?? 'Save failed');
       setSavedId(data.id);
       setSaveStatus('saved');
+      // Fetch signed PDF URL for the download button
+      fetch('/api/drawings/' + data.id)
+        .then(r => r.json())
+        .then(d => {
+          if (d.pdf_path) {
+            return fetch('/api/files/signed-url', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ path: d.pdf_path, bucket: 'drawings-pdf' }),
+            }).then(r => r.json()).then(u => u.url && setPdfUrl(u.url));
+          }
+        })
+        .catch(() => null);
     } catch (err) {
       console.error('[autoSave]', err);
       setSaveStatus('error');
@@ -84,6 +98,7 @@ export default function CreatePage() {
     setSaveStatus('idle');
     setSavedId(null);
     setSaveError(null);
+    setPdfUrl(null);
     previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     try {
@@ -308,6 +323,16 @@ export default function CreatePage() {
                 {/* Hover overlay */}
                 <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 bg-black/0 transition-colors group-hover:pointer-events-auto group-hover:bg-black/40">
                   <ActionButton onClick={downloadPng} icon={<DownloadIcon />} label="Download PNG" />
+                  {pdfUrl && (
+                    <a
+                      href={pdfUrl}
+                      download={`${artifactTitle}.pdf`}
+                      className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold shadow-lg transition-opacity"
+                      style={{ background: 'rgba(249,115,22,0.92)', color: '#fff', backdropFilter: 'blur(4px)' }}
+                    >
+                      <DownloadIcon /> Download PDF
+                    </a>
+                  )}
                   {artifact.kind === 'svg' && (
                     <ActionButton onClick={downloadSvg} icon={<DownloadIcon />} label="Export SVG" />
                   )}

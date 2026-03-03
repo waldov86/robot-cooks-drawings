@@ -271,8 +271,8 @@ export default function CreatePage() {
             {/* Placeholder / spinner */}
             {!artifact && (
               <div
-                className="flex flex-col items-center justify-center gap-4"
-                style={{ aspectRatio: ar }}
+                className="flex flex-col items-center gap-4"
+                style={{ aspectRatio: ar, justifyContent: generating ? 'flex-start' : 'center', paddingTop: generating ? '2.5rem' : 0 }}
               >
                 {generating ? (
                   <div className="flex flex-col items-center gap-4">

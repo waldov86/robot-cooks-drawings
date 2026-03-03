@@ -327,7 +327,7 @@ export default function CreatePage() {
                     className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold shadow-lg"
                     style={{ background: 'rgba(28,25,22,0.82)', color: '#fff', backdropFilter: 'blur(4px)' }}
                   >
-                    <DownloadIcon /> PNG
+                    <DownloadIcon /> Download as PNG
                   </button>
                   {pdfUrl ? (
                     <a
@@ -336,7 +336,7 @@ export default function CreatePage() {
                       className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold shadow-lg"
                       style={{ background: 'rgba(249,115,22,0.9)', color: '#fff', backdropFilter: 'blur(4px)' }}
                     >
-                      <DownloadIcon /> PDF
+                      <DownloadIcon /> Download as PDF
                     </a>
                   ) : (
                     <span
@@ -344,7 +344,7 @@ export default function CreatePage() {
                       style={{ background: 'rgba(249,115,22,0.4)', color: '#fff', backdropFilter: 'blur(4px)', cursor: 'wait' }}
                       title={saveStatus === 'saving' ? 'Preparing PDF…' : 'PDF not ready'}
                     >
-                      <DownloadIcon /> PDF{saveStatus === 'saving' ? '…' : ''}
+                      <DownloadIcon /> Download as PDF{saveStatus === 'saving' ? '…' : ''}
                     </span>
                   )}
                 </div>

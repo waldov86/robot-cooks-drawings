@@ -320,21 +320,32 @@ export default function CreatePage() {
                   </div>
                 </button>
 
-                {/* Hover overlay */}
-                <div className="pointer-events-none absolute inset-0 flex items-center justify-center gap-3 bg-black/0 transition-colors group-hover:pointer-events-auto group-hover:bg-black/40">
-                  <ActionButton onClick={downloadPng} icon={<DownloadIcon />} label="Download PNG" />
-                  {pdfUrl && (
+                {/* Buttons pinned to top of image, always visible */}
+                <div className="absolute top-3 left-0 right-0 flex justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={downloadPng}
+                    className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold shadow-lg"
+                    style={{ background: 'rgba(28,25,22,0.82)', color: '#fff', backdropFilter: 'blur(4px)' }}
+                  >
+                    <DownloadIcon /> PNG
+                  </button>
+                  {pdfUrl ? (
                     <a
                       href={pdfUrl}
                       download={`${artifactTitle}.pdf`}
-                      className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold shadow-lg transition-opacity"
-                      style={{ background: 'rgba(249,115,22,0.92)', color: '#fff', backdropFilter: 'blur(4px)' }}
+                      className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold shadow-lg"
+                      style={{ background: 'rgba(249,115,22,0.9)', color: '#fff', backdropFilter: 'blur(4px)' }}
                     >
-                      <DownloadIcon /> Download PDF
+                      <DownloadIcon /> PDF
                     </a>
-                  )}
-                  {artifact.kind === 'svg' && (
-                    <ActionButton onClick={downloadSvg} icon={<DownloadIcon />} label="Export SVG" />
+                  ) : (
+                    <span
+                      className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold shadow-lg"
+                      style={{ background: 'rgba(249,115,22,0.4)', color: '#fff', backdropFilter: 'blur(4px)', cursor: 'wait' }}
+                      title={saveStatus === 'saving' ? 'Preparing PDF…' : 'PDF not ready'}
+                    >
+                      <DownloadIcon /> PDF{saveStatus === 'saving' ? '…' : ''}
+                    </span>
                   )}
                 </div>
               </>
